@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<constant name="struts.configuration.xml.reload" value="true" />
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.multipart.maxSize" value="209715200"/>
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
+
+	<package name="default" namespace="/" extends="struts-default">
+		<interceptors>
+			<interceptor name="checkuser" class="xq.exam.intc.UserInterceptor" />
+			<interceptor name="checkadmin" class="xq.exam.intc.AdminInterceptor" />
+			<interceptor name="checkteacher" class="xq.exam.intc.TeacherInterceptor" />
+			<interceptor name="checkstudent" class="xq.exam.intc.StudentInterceptor" />
+		</interceptors>
+<!-- 保证loginpage不受checkadmin拦截器影响 -->
+		<action name="loginpage">
+			<result name="success">/WEB-INF/jsp/loginpage.jsp</result>
+		</action>
+		
+<!-- admin's action -->
+		<action name="admin_login" class="xq.exam.action.AdminLoginAction">
+			<result name="success" type="redirect">admin_main.action</result>
+			<result name="input" type="redirect">loginpage.action</result>
+		</action>
+		<action name="admin_logout" class="xq.exam.action.AdminLoginAction" method="logout">
+			<result name="success" type="redirect">loginpage.action</result>
+		</action>
+		<action name="admin_passwd" class="xq.exam.action.AdminLoginAction" method="passwd">
+			<interceptor-ref name="checkadmin" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirect">admin_main.action</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/admin/errorpage.jsp</result>
+		</action>
+		<action name="admin_teacher" class="xq.exam.action.AdminTeacherAction">
+			<interceptor-ref name="checkadmin" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/admin/teacher.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="admin_teacher_insert" class="xq.exam.action.AdminTeacherAction" method="insert">
+			<interceptor-ref name="checkadmin" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirect">admin_teacher.action</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="admin_teacher_modify" class="xq.exam.action.AdminTeacherAction" method="modify">
+			<interceptor-ref name="checkadmin" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/admin/teacher_modify.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="admin_teacher_update" class="xq.exam.action.AdminTeacherAction" method="update">
+			<interceptor-ref name="checkadmin" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirect">admin_teacher.action</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="admin_teacher_delete" class="xq.exam.action.AdminTeacherAction" method="delete">
+			<interceptor-ref name="checkadmin" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirect">admin_teacher.action</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="admin_exam" class="xq.exam.action.AdminExamAction">
+			<interceptor-ref name="checkadmin" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/admin/exam.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="admin_exam_clear" class="xq.exam.action.AdminExamAction" method="clear">
+			<interceptor-ref name="checkadmin" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirect">admin_exam.action</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="admin_exam_delete" class="xq.exam.action.AdminExamAction" method="delete">
+			<interceptor-ref name="checkadmin" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirect">admin_exam.action</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="admin_config" class="xq.exam.action.AdminConfigAction">
+			<interceptor-ref name="checkadmin" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/admin/config.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="admin_config_update" class="xq.exam.action.AdminConfigAction" method="update">
+			<interceptor-ref name="checkadmin" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirect">admin_config.action</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="admin_*">
+			<interceptor-ref name="checkadmin" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/admin/{1}.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		
+<!-- teacher's action -->
+		<action name="teacher_login" class="xq.exam.action.TeacherLoginAction">
+			<result name="success" type="redirect">teacher_main.action</result>
+			<result name="input" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_logout" class="xq.exam.action.TeacherLoginAction" method="logout">
+			<result name="success" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_passwd" class="xq.exam.action.TeacherLoginAction" method="passwd">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirect">teacher_main.action</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_exam_before" class="xq.exam.action.TeacherExamAction">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/exam_before.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_exam_insert" class="xq.exam.action.TeacherExamAction" method="insert">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirect">teacher_exam_before.action</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_exam_modify" class="xq.exam.action.TeacherExamAction" method="modify">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/exam_modify.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_exam_update" class="xq.exam.action.TeacherExamAction" method="update">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/exam_modify.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_exam_upload" class="xq.exam.action.TeacherExamAction" method="upload">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/exam_modify.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_exam_download" class="xq.exam.action.TeacherExamAction" method="download">
+			<result name="success" type="stream">
+				<param name="contentDisposition">attachment;filename="${paperName}"</param>
+				<param name="inputName">paperFile</param>
+				<param name="contentType">paperType</param>
+			</result>
+		</action>
+		<action name="teacher_exam_active" class="xq.exam.action.TeacherExamAction" method="active">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirect">teacher_exam_before.action</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_exam_finish" class="xq.exam.action.TeacherExamAction" method="finish">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirect">teacher_exam_after.action</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_exam_reactive" class="xq.exam.action.TeacherExamAction" method="reactive">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirect">teacher_exam_after.action</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_exam_after" class="xq.exam.action.TeacherExamAction">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/exam_after.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_exam_zip" class="xq.exam.action.TeacherZipExportAction">
+			<result name="success" type="stream">
+				<param name="contentDisposition">attachment;filename="${zipName}"</param>
+				<param name="inputName">zipFile</param>
+				<param name="contentType">zipType</param>
+			</result>
+			<result name="empty" type="redirect">teacher_exam_after.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_exam_export" class="xq.exam.action.TeacherZipExportAction">
+			<result name="success" type="stream">
+				<param name="contentDisposition">attachment;filename="${xlsName}"</param>
+				<param name="inputName">xlsFile</param>
+				<param name="contentType">xlsType</param>
+			</result>
+			<result name="empty" type="redirect">teacher_exam_after.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_exam_clear" class="xq.exam.action.TeacherExamAction" method="clear">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirect">teacher_exam_after.action</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_exam_delete" class="xq.exam.action.TeacherExamAction" method="delete">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirect">teacher_exam_after.action</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_student" class="xq.exam.action.TeacherStudentAction">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/exam_student.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_student_insert" class="xq.exam.action.TeacherStudentAction" method="insert">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/exam_student.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_student_delete" class="xq.exam.action.TeacherStudentAction" method="delete">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/exam_student.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_student_upload" class="xq.exam.action.TeacherStudentAction" method="upload">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/exam_student.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="teacher_manage_summary" class="xq.exam.action.TeacherManageAction">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/manage_summary.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_manage_showbind" class="xq.exam.action.TeacherManageAction" method="showBind">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/manage_showbind.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_manage_showunbind" class="xq.exam.action.TeacherManageAction" method="showUnbind">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/manage_showunbind.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_manage_showsubmit" class="xq.exam.action.TeacherManageAction" method="showSubmit">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/manage_showsubmit.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_manage_showunsubmit" class="xq.exam.action.TeacherManageAction" method="showUnsubmit">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/manage_showunsubmit.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_manage_student" class="xq.exam.action.TeacherManageAction" method="student">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/manage_student.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_manage_student_insert" class="xq.exam.action.TeacherStudentAction" method="manage_insert">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/manage_student.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_manage_student_search" class="xq.exam.action.TeacherStudentAction" method="manage_search">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/manage_student.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_manage_unlock" class="xq.exam.action.TeacherManageAction" method="unlock">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/manage_unlock.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_manage_binding_search" class="xq.exam.action.TeacherManageAction" method="binding_search">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/manage_unlock.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_manage_binding_searchip" class="xq.exam.action.TeacherManageAction" method="binding_searchip">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/manage_unlock.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_manage_binding_delete" class="xq.exam.action.TeacherManageAction" method="binding_delete">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/manage_unlock.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_manage_notify" class="xq.exam.action.TeacherManageAction" method="listnotify">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/manage_notify.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_manage_notify_add" class="xq.exam.action.TeacherManageAction" method="notify_add">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/manage_notify.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_manage_notify_del" class="xq.exam.action.TeacherManageAction" method="notify_del">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/manage_notify.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+			<result name="input">/WEB-INF/jsp/teacher/errorpage.jsp</result>
+		</action>
+		<action name="teacher_*">
+			<interceptor-ref name="checkteacher" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/teacher/{1}.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+
+<!-- student's action -->
+		<action name="student_login" class="xq.exam.action.StudentLoginAction">
+			<result name="success" type="redirect">student_main.action</result>
+			<result name="input">/WEB-INF/jsp/loginpage.jsp</result>
+		</action>
+		<action name="student_main" class="xq.exam.action.StudentExamAction">
+			<interceptor-ref name="checkstudent" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/student/main.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="student_exam_download" class="xq.exam.action.StudentExamAction" method="download">
+			<result name="success" type="stream">
+				<param name="contentDisposition">attachment;filename="${paperName}"</param>
+				<param name="inputName">paperFile</param>
+				<param name="contentType">paperType</param>
+			</result>
+		</action>
+		<action name="student_exam_upload" class="xq.exam.action.StudentExamAction" method="upload">
+			<interceptor-ref name="checkstudent" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/student/listdir.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="student_exam_listdir" class="xq.exam.action.StudentExamAction" method="listdir">
+			<interceptor-ref name="checkstudent" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/student/listdir.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+<!-- 保证student_notify不受checkstudent拦截器影响 -->
+		<action name="student_notify">
+			<result name="success">/WEB-INF/jsp/student/notify.jsp</result>
+		</action>
+		<action name="student_*">
+			<interceptor-ref name="checkstudent" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/student/{1}.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+		<action name="*">
+			<interceptor-ref name="checkuser" />
+			<interceptor-ref name="defaultStack" />
+			<result name="success">/WEB-INF/jsp/{1}.jsp</result>
+			<result name="login" type="redirect">loginpage.action</result>
+		</action>
+	</package>
+
+	<!-- Add packages here -->
+
+</struts>

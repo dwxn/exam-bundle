@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-1-21 15:49:38 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="xq.exam.vo.Exam" table="exam" catalog="exam">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="teacher" class="xq.exam.vo.Teacher" fetch="select" lazy="false">
+            <column name="ecreator" not-null="true" />
+        </many-to-one>
+        <property name="ename" type="string">
+            <column name="ename" length="40" not-null="true" />
+        </property>
+        <property name="epaper" type="string">
+            <column name="epaper" length="255" />
+        </property>
+        <property name="etype" type="string">
+            <column name="etype" length="45" />
+        </property>
+        <property name="etime" type="timestamp">
+            <column name="etime" length="19" not-null="true" />
+        </property>
+        <property name="eautostart" type="boolean">
+            <column name="eautostart" />
+        </property>
+        <property name="eactive" type="boolean">
+            <column name="eactive" />
+        </property>
+        <property name="efinish" type="boolean">
+            <column name="efinish" />
+        </property>
+        <property name="earchived" type="boolean">
+            <column name="earchived" />
+        </property>
+        <property name="ecleared" type="boolean">
+            <column name="ecleared" />
+        </property>
+        <set name="submits" table="submit" inverse="true" lazy="true" fetch="select" order-by="sid">
+            <key>
+                <column name="eid" />
+            </key>
+            <one-to-many class="xq.exam.vo.Submit" />
+        </set>
+        <set name="bindings" table="binding" inverse="true" lazy="true" fetch="select" order-by="sid">
+            <key>
+                <column name="eid" />
+            </key>
+            <one-to-many class="xq.exam.vo.Binding" />
+        </set>
+    </class>
+</hibernate-mapping>

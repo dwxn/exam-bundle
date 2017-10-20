@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://localhost:3306/exam</value>
+		</property>
+		<property name="username">
+			<value>exam</value>
+		</property>
+		<property name="password">
+			<value>123456</value>
+		</property>
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>xq/exam/vo/Binding.hbm.xml</value>
+				<value>xq/exam/vo/Submit.hbm.xml</value>
+				<value>xq/exam/vo/Exam.hbm.xml</value>
+				<value>xq/exam/vo/Student.hbm.xml</value>
+				<value>xq/exam/vo/Teacher.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+<!-- 				<prop key="hibernate.show_sql"> -->
+<!-- 					true -->
+<!-- 				</prop> -->
+			</props>
+		</property>
+	</bean>
+
+	<bean id="bindingHome" class="xq.exam.dao.BindingHome">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="examHome" class="xq.exam.dao.ExamHome">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="studentHome" class="xq.exam.dao.StudentHome">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="submitHome" class="xq.exam.dao.SubmitHome">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="teacherHome" class="xq.exam.dao.TeacherHome">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory"/>
+		</property>
+	</bean>
+
+    <bean id="transactionManager"
+        class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory">
+            <ref local="sessionFactory" />
+        </property>
+    </bean>
+
+    <bean
+        class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <property name="beanNames">
+            <list>
+                <value>bindingHome</value>
+                <value>examHome</value>
+                <value>studentHome</value>
+                <value>submitHome</value>
+                <value>teacherHome</value>
+            </list>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>txInterceptor</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="txInterceptor"
+        class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="transactionAttributes">
+            <props>
+                 <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+	<bean id="teacherManager" class="xq.exam.service.TeacherManager">
+		<property name="th">
+			<ref bean="teacherHome"/>
+		</property>
+	</bean>
+	<bean id="studentManager" class="xq.exam.service.StudentManager">
+		<property name="sh">
+			<ref bean="studentHome"/>
+		</property>
+	</bean>
+	<bean id="examManager" class="xq.exam.service.ExamManager">
+		<property name="eh">
+			<ref bean="examHome"/>
+		</property>
+	</bean>
+	<bean id="bindingManager" class="xq.exam.service.BindingManager">
+		<property name="bh">
+			<ref bean="bindingHome"/>
+		</property>
+	</bean>
+	<bean id="submitManager" class="xq.exam.service.SubmitManager">
+		<property name="sh">
+			<ref bean="submitHome"/>
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-1-21 15:49:38 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="xq.exam.vo.Student" table="student" catalog="exam">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="sno" type="string">
+            <column name="sno" length="12" not-null="true" />
+        </property>
+        <property name="sname" type="string">
+            <column name="sname" length="12" not-null="true" />
+        </property>
+        <property name="sclass" type="string">
+            <column name="sclass" length="20" />
+        </property>
+        <property name="eid" type="java.lang.Integer">
+            <column name="eid" not-null="true" />
+        </property>
+        <set name="bindings" table="binding" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="sid" not-null="true" />
+            </key>
+            <one-to-many class="xq.exam.vo.Binding" />
+        </set>
+        <set name="submits" table="submit" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="sid" not-null="true" />
+            </key>
+            <one-to-many class="xq.exam.vo.Submit" />
+        </set>
+    </class>
+</hibernate-mapping>

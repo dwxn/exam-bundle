@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-1-21 15:49:38 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="xq.exam.vo.Teacher" table="teacher" catalog="exam">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="tname" type="string">
+            <column name="tname" length="20" not-null="true" />
+        </property>
+        <property name="tpass" type="string">
+            <column name="tpass" length="40" not-null="true" />
+        </property>
+        <property name="tfullname" type="string">
+            <column name="tfullname" length="12" />
+        </property>
+        <property name="tadmin" type="java.lang.Boolean">
+            <column name="tadmin" />
+        </property>
+        <set name="exams" table="exam" inverse="true" lazy="false" fetch="select" order-by="id">
+            <key>
+                <column name="ecreator" not-null="true" />
+            </key>
+            <one-to-many class="xq.exam.vo.Exam" />
+        </set>
+    </class>
+</hibernate-mapping>
